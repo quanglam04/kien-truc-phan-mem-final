@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: costume-rental
+  datasource:
+    url: jdbc:mysql://mysql:3306/costume_rental_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: root
+    password: root123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  devtools:
+    restart:
+      enabled: true
+
+app:
+  prefix:
+    costume: TP
+    supplier: NCC
+    import: HDN
+  format:
+    costume: "%03d"
+    supplier: "%02d"
+    import: "%03d"
+
+logging:
+  level:
+    com.costumemanagement: DEBUG
+  charset:
+    console: UTF-8

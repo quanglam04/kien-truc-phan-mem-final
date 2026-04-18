@@ -1,0 +1,71 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: costume-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: costume_rental_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - costume-data:/var/lib/mysql
+    healthcheck:
+      test:
+        ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot123"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root123
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  app:
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    image: maven:3.9-eclipse-temurin-17
+    container_name: costume-backend
+    working_dir: /app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ~/.m2:/root/.m2 # Cache lại thư viện để không phải tải lại mỗi lần restart
+    command: mvn spring-boot:run
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: trinhquanglam/frontend-costume:latest
+    container_name: costume-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - app
+    networks:
+      - app-network
+
+volumes:
+  costume-data:
+
+networks:
+  app-network:
+    driver: bridge
