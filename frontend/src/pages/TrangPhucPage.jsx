@@ -242,31 +242,6 @@ export default function TrangPhucPage() {
         </button>
       </div>
 
-      <div className="toolbar">
-        <div className="search-box">
-          <span className="search-icon">⌕</span>
-          <input
-            type="text"
-            placeholder="Tìm theo tên hoặc mã..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <select
-          className="filter-select"
-          value={filterLoai}
-          onChange={(e) => setFilterLoai(e.target.value)}
-        >
-          <option value="">Tất cả loại</option>
-          {loais.map((l) => (
-            <option key={l.id} value={l.loaiTrangPhuc}>
-              {l.loaiTrangPhuc}
-            </option>
-          ))}
-        </select>
-        <span className="count-badge">{filtered.length} trang phục</span>
-      </div>
-
       {loading ? (
         <div className="loading-state">
           <div className="spinner" />
