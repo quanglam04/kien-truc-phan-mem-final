@@ -154,7 +154,6 @@ public class HoaDonNhapServiceImpl implements HoaDonNhapService {
                 for (ChiTietHoaDonNhap ct : hoaDon.getChiTietHDNhap()) {
                     TrangPhuc tp = ct.getTrangPhuc();
                     // Nếu chi tiết có ghi rõ size thì cập nhật theo size đó,
-                    // ngược lại cộng đều vào tất cả các size hiện có
                     if (ct.getKichThuoc() != null) {
                         costumeService.updateQuantityBySize(
                                 tp.getMaTrangPhuc(),
@@ -162,15 +161,6 @@ public class HoaDonNhapServiceImpl implements HoaDonNhapService {
                                 ct.getSoLuong());
                         logger.info("Cap nhat so luong {} - size {}: +{}",
                                 tp.getMaTrangPhuc(), ct.getKichThuoc().getKichThuoc(), ct.getSoLuong());
-                    } else {
-                        // Không chỉ định size: cộng đều vào các size đang có
-                        costumeService.getSizeQuantities(tp.getMaTrangPhuc()).forEach(cs ->
-                                costumeService.updateQuantityBySize(
-                                        tp.getMaTrangPhuc(),
-                                        cs.getKichThuoc().getId(),
-                                        ct.getSoLuong()));
-                        logger.info("Cap nhat so luong {} (tat ca size): +{}",
-                                tp.getMaTrangPhuc(), ct.getSoLuong());
                     }
                 }
             }
